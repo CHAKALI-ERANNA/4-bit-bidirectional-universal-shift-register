@@ -1,0 +1,36 @@
+`timescale 1ns / 1ps
+
+module Four_bit_universal_shift_register(CLR,clk,S,SR_SER,SL_SER,D,Q
+
+    );
+    input CLR,clk,SR_SER,SL_SER;
+    input [0:1]S;
+    input [0:3]D;
+    output reg [0:3]Q;
+    always@(posedge clk,negedge CLR)
+    begin
+        if(!CLR)
+            Q <= 0;
+        else
+        begin
+            case({S})
+                2'b11 : begin       //parallel inputs
+                            Q <= D;
+                          
+                        end
+                2'b10 : begin   //right shift + serial input to Q[0]
+                            Q[0] <= SR_SER;
+                            Q[3:1] <= Q[2:0];
+                           
+                        end
+                2'b01 : begin
+                            Q[3] <= SL_SER;   // left shift + serial input to Q[3]
+                            Q[2:0] <= Q[3:1];
+                            
+                        end
+                2'b00 : Q <= Q;
+           endcase
+                        
+        end
+    end
+endmodule

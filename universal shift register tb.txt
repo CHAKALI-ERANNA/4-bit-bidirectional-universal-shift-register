@@ -1,0 +1,44 @@
+`timescale 1ns / 1ps
+
+module four_bit_universal_shift_register_TB;
+    reg clk,CLR,SR_SER,SL_SER;
+    reg [0:3]D;
+    reg [0:1]S;
+    wire [0:3]Q;
+    always #5 clk = ~clk;
+    Four_bit_universal_shift_register uut(CLR,clk,S,SR_SER,SL_SER,D,Q);
+    initial begin
+        clk = 0;
+        CLR = 1;
+        SR_SER = 0;
+        SL_SER = 0;
+        D = 0;
+        S = 2'b00;     
+    end
+    initial begin
+        #5 CLR <= 0;
+        #10 CLR <= 1;
+        
+            S <= 2'b11;
+         D <= 4'b1010; #40;
+        
+        #10 S <= 2'b10;
+        #50 SR_SER <= 0;
+             SR_SER <= 1;
+        //#10  SR_SER <= 1; 
+        #10 SR_SER <= 0;
+        
+        #10 S <= 2'b01;
+        #60 SL_SER <= 1;
+        #10 SL_SER <= 0;
+        #10 SL_SER <= 0;
+        #10 SL_SER <= 1;
+        
+        #10 CLR <= 0;
+        #10 CLR <= 1;
+        
+        #10 S <= 2'b00;
+        
+        #100 $finish;    
+     end
+endmodule
